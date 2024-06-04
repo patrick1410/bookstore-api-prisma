@@ -11,7 +11,8 @@ const router = express.Router();
 router.get("/", (req, res) => {
   // Het is niet nodig om hier /records van te maken dat word al gedefinieerd in index.js
   try {
-    const records = getRecords();
+    const { artist, genre, available } = req.query;
+    const records = getRecords(artist, genre, available);
     res.status(200).json(records);
   } catch (error) {
     console.log(error);
