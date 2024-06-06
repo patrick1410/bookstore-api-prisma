@@ -6,6 +6,8 @@ import { createBook } from "../services/books/createBook.js";
 import { updateBookById } from "../services/books/updateBookById.js";
 import { deleteBook } from "../services/books/deleteBook.js";
 
+import authMiddleware from "../middleware/auth.js";
+
 const router = express.Router();
 
 router.get("/", (req, res) => {
@@ -35,7 +37,7 @@ router.get("/:id", (req, res) => {
   }
 });
 
-router.post("/", (req, res) => {
+router.post("/", authMiddleware, (req, res) => {
   try {
     const { title, author, isbn, pages, available, genre } = req.body;
     const newBook = createBook(title, author, isbn, pages, available, genre);
@@ -46,7 +48,7 @@ router.post("/", (req, res) => {
   }
 });
 
-router.put("/:id", (req, res) => {
+router.put("/:id", authMiddleware, (req, res) => {
   try {
     const { id } = req.params;
     const { title, author, isbn, pages, available, genre } = req.body;
@@ -67,7 +69,7 @@ router.put("/:id", (req, res) => {
   }
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", authMiddleware, (req, res) => {
   try {
     const { id } = req.params;
     const deletedBookId = deleteBook(id);

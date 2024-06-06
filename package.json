@@ -11,8 +11,11 @@
   "author": "Patrick",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.4.5",
     "express": "^4.19.2",
-    "uuid": "^9.0.1"
+    "jsonwebtoken": "^9.0.2",
+    "uuid": "^9.0.1",
+    "winston": "^3.13.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.1"
