@@ -8,6 +8,8 @@ import { deleteBook } from "../services/books/deleteBook.js";
 
 import { checkJwt } from "../middleware/advancedAuth.js";
 
+import { notFoundErrorHandler } from "../middleware/notFoundErrorHandler.js";
+
 const router = express.Router();
 
 router.get("/", (req, res) => {
@@ -21,21 +23,31 @@ router.get("/", (req, res) => {
   }
 });
 
-router.get("/:id", (req, res) => {
-  try {
+// router.get("/:id", (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const book = getBookById(id);
+
+//     if (!book) {
+//       res.status(404).send(`Book with id ${id} was not found!`);
+//     } else {
+//       res.status(200).json(book);
+//     }
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send("Something went wrong while getting book by id!");
+//   }
+// });
+router.get(
+  "/:id",
+  (req, res) => {
     const { id } = req.params;
     const book = getBookById(id);
 
-    if (!book) {
-      res.status(404).send(`Book with id ${id} was not found!`);
-    } else {
-      res.status(200).json(book);
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Something went wrong while getting book by id!");
-  }
-});
+    res.status(200).json(book);
+  },
+  notFoundErrorHandler
+);
 
 router.post("/", checkJwt, (req, res) => {
   try {

@@ -11,6 +11,8 @@
   "author": "Patrick",
   "license": "ISC",
   "dependencies": {
+    "@sentry/node": "^8.8.0",
+    "@sentry/profiling-node": "^8.8.0",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "express-oauth2-jwt-bearer": "^1.6.0",

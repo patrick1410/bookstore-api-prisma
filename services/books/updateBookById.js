@@ -1,4 +1,5 @@
 import bookData from "../../data/books.json" assert { type: "json" };
+import { NotFoundError } from "../../errors/notFoundError.js";
 
 export const updateBookById = (
   id,
@@ -12,7 +13,7 @@ export const updateBookById = (
   const book = bookData.books.find((book) => book.id === id);
 
   if (!book) {
-    throw new Error(`Book with id ${id} was not found!`);
+    throw new NotFoundError("Book", id);
   }
 
   book.title = title ?? book.title;
