@@ -1,7 +1,7 @@
 {
-  "name": "express-book-app",
+  "name": "bookstore-api-prisma",
   "version": "1.0.0",
-  "description": "My first Express app",
+  "description": "bookstore-api-prisma",
   "main": "index.js",
   "type": "module",
   "scripts": {
