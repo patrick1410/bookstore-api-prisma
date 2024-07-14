@@ -1,3 +1,5 @@
+// NOW WITH PRISMA!
+
 import express from "express";
 import booksRouter from "./routes/books.js";
 import recordsRouter from "./routes/records.js";
