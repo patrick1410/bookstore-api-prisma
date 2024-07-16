@@ -1,8 +1,15 @@
-import bookData from "../../data/books.json" assert { type: "json" };
+import { PrismaClient } from "@prisma/client";
 import { NotFoundError } from "../../errors/notFoundError.js";
 
-export const getBookById = (id) => {
-  const book = bookData.books.find((book) => book.id === id);
+export const getBookById = async (id) => {
+  const prisma = new PrismaClient();
+
+  const book = await prisma.book.findUnique({
+    where: {
+      id,
+    },
+  });
+
   if (!book) {
     throw new NotFoundError("Book", id);
   }

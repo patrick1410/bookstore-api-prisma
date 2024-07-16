@@ -12,10 +12,10 @@ import { notFoundErrorHandler } from "../middleware/notFoundErrorHandler.js";
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const { genre, available } = req.query;
-    const books = getBooks(genre, available);
+    const books = await getBooks(genre, available);
     res.status(200).json(books);
   } catch (error) {
     console.error(error);
@@ -38,13 +38,19 @@ router.get("/", (req, res) => {
 //     res.status(500).send("Something went wrong while getting book by id!");
 //   }
 // });
+
+// Errors coming from async functions, we have to send the error to the middleware via the built-in next function of our Express route next(error).
 router.get(
   "/:id",
-  (req, res) => {
-    const { id } = req.params;
-    const book = getBookById(id);
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const book = await getBookById(id);
 
-    res.status(200).json(book);
+      res.status(200).json(book);
+    } catch (error) {
+      next(error);
+    }
   },
   notFoundErrorHandler
 );
