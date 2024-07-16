@@ -9,6 +9,56 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id       String @id @default(uuid())
+  username String @unique
+  password String
+  orders   Order[]
+}
+
+model Book {
+  id        String  @id @default(uuid())
+  title     String
+  author    String
+  isbn      String
+  pages     Int
+  available Boolean
+  genre     String
+  orders    Order[]
+}
+
+// model Record {
+//   id        String    @id @default(uuid())
+//   title     String
+//   artist    String
+//   year      Int
+//   available Boolean
+//   genre     String
+// }
+
+model Order {
+  id String @id @default(uuid())
+
+  // Relations by id
+  book_id String
+  user_id String
+
+  order_date     DateTime
+  delivery_date  DateTime?
+  payment_method String
+  comment        String?
+
+  // Relations
+  user User @relation(fields: [user_id], references: [id])
+  book Book @relation(fields: [book_id], references: [id])
+
+  // Indexes
+  @@index([book_id])
+  @@index([user_id])
+
 }
