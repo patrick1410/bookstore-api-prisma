@@ -10,6 +10,8 @@ import { checkJwt } from "../middleware/advancedAuth.js";
 
 import { notFoundErrorHandler } from "../middleware/notFoundErrorHandler.js";
 
+import authMiddleware from "../middleware/auth.js";
+
 const router = express.Router();
 
 router.get("/", async (req, res) => {
@@ -55,54 +57,59 @@ router.get(
   notFoundErrorHandler
 );
 
-router.post("/", checkJwt, (req, res) => {
-  try {
-    const { title, author, isbn, pages, available, genre } = req.body;
-    const newBook = createBook(title, author, isbn, pages, available, genre);
-    res.status(201).json(newBook);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Something went wrong while creating new book!");
-  }
+router.post("/", authMiddleware, async (req, res) => {
+  const { title, author, isbn, pages, available, genre } = req.body;
+  const newBook = await createBook(
+    title,
+    author,
+    isbn,
+    pages,
+    available,
+    genre
+  );
+  res.status(201).json(newBook);
 });
 
-router.put("/:id", checkJwt, (req, res) => {
-  try {
-    const { id } = req.params;
-    const { title, author, isbn, pages, available, genre } = req.body;
-    const updatedBook = updateBookById(
-      id,
-      title,
-      author,
-      isbn,
-      pages,
-      available,
-      genre
-    );
+router.put(
+  "/:id",
+  authMiddleware,
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const { title, author, isbn, pages, available, genre } = req.body;
+      const updatedBook = await updateBookById(
+        id,
+        title,
+        author,
+        isbn,
+        pages,
+        available,
+        genre
+      );
+      res.status(200).json(updatedBook);
+    } catch (error) {
+      next(error);
+    }
+  },
+  notFoundErrorHandler
+);
 
-    res.status(200).json(updatedBook);
-  } catch (error) {
-    console.log(error);
-    res.status(500).send("Something went wrong while updating book by id!");
-  }
-});
+router.delete(
+  "/:id",
+  authMiddleware,
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const deletedBookId = await deleteBook(id);
 
-router.delete("/:id", checkJwt, (req, res) => {
-  try {
-    const { id } = req.params;
-    const deletedBookId = deleteBook(id);
-
-    if (!deletedBookId) {
-      res.status(404).send(`Book with id ${id} was not found!`);
-    } else {
       res.status(200).json({
         message: `Book with id ${deletedBookId} was deleted!`,
       });
+    } catch (error) {
+      next(error);
     }
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Something went wrong while deleting book by id!");
-  }
-});
+  },
+  notFoundErrorHandler
+);
 
 export default router;

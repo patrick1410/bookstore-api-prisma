@@ -1,13 +1,18 @@
-import bookData from "../../data/books.json" assert { type: "json" };
+import { PrismaClient } from "@prisma/client";
 import { NotFoundError } from "../../errors/notFoundError.js";
 
-export const deleteBook = (id) => {
-  const index = bookData.books.findIndex((book) => book.id === id);
+export const deleteBook = async (id) => {
+  const prisma = new PrismaClient();
 
-  if (index === -1) {
+  const deleteBook = await prisma.book.deleteMany({
+    where: {
+      id,
+    },
+  });
+
+  if (!deleteBook || deleteBook.count === 0) {
     throw new NotFoundError("Book", id);
   }
 
-  bookData.books.splice(index, 1);
   return id;
 };
