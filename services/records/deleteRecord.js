@@ -1,13 +1,18 @@
-import recordData from "../../data/records.json" assert { type: "json" };
+import { PrismaClient } from "@prisma/client";
 import { NotFoundError } from "../../errors/notFoundError.js";
 
-export const deleteRecord = (id) => {
-  const index = recordData.records.findIndex((record) => record.id === id);
+export const deleteRecord = async (id) => {
+  const prisma = new PrismaClient();
 
-  if (index === -1) {
-    throw new NotFoundError("Record", id);
+  const deleteRecord = await prisma.record.deleteMany({
+    where: {
+      id,
+    },
+  });
+
+  if (!deleteRecord || deleteRecord.count === 0) {
+    throw new NotFoundError("Book", id);
   }
 
-  recordData.records.splice(index, 1);
   return id;
 };

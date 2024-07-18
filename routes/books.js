@@ -6,11 +6,8 @@ import { createBook } from "../services/books/createBook.js";
 import { updateBookById } from "../services/books/updateBookById.js";
 import { deleteBook } from "../services/books/deleteBook.js";
 
-import { checkJwt } from "../middleware/advancedAuth.js";
-
-import { notFoundErrorHandler } from "../middleware/notFoundErrorHandler.js";
-
 import authMiddleware from "../middleware/auth.js";
+import { notFoundErrorHandler } from "../middleware/notFoundErrorHandler.js";
 
 const router = express.Router();
 
